@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="2.5" group="system" method="upgrade">
+    <name>System - Correo de Cumpleaños</name>
+    <author>Shaking Web</author>
+    <creationDate>September 2015</creationDate>
+    <copyright>Copyright (C) 2015 Shaking Web. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>contacto@shakingweb.com</authorEmail>
+    <authorUrl>http://www.shakingweb.com</authorUrl>
+    <version>1.0.0</version>
+    <description>Envía un email de forma automática a todas las personas que están de cumpleaños</description>
+        
+    <files>
+        <filename plugin="emailbirthday">emailbirthday.php</filename>
+        <filename>index.html</filename>
+        <filename>message.php</filename>
+        <folder>sendmail</folder>
+    </files>
+        
+    <languages folder="language">
+        <language tag="es-ES">es-ES.plg_system_emailbirthday.ini</language>
+    </languages>
+        
+    <config>
+        <fields name="params">
+            <fieldset name="message" label="PLG_EMAILBIRTHDAY_LABEL">
+                <field name="messagecontent" label ="" description=""
+                       type="editor" width="150" filter="safehtml" default="" />
+            </fieldset>
+        </fields>
+    </config>
+</extension>
