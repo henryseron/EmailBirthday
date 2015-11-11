@@ -55,15 +55,15 @@ class message {
                 . "(SELECT `user_id` FROM `".$this->config->dbprefix."user_profiles` "
                 . "WHERE `profile_key` = 'profile.dob' AND `profile_value` "
                 . "LIKE '%-".date('m')."-".date('d')."%');";
-//        echo $query."\n";
+        //echo $query."\n\n";
         $result = mysql_query($query, $link);
         
         $users = Array();
         $pos = 0;
-        while($result = mysql_fetch_array($result)){
-            $users[$pos]['name'] = $result['name'];
-            $users[$pos]['email'] = $result['email'];
-            $pos++;
+        while(($res = mysql_fetch_array($result))){
+            $users['name'][$pos] = $res['name'];
+            $users['email'][$pos] = $res['email'];
+			$pos++;
         }
 
         $this->close($link);
@@ -78,7 +78,7 @@ class message {
      */
     public function sendMail($recipient = array()){
         
-        if($recipient != null && count($recipient) > 0){
+        if($recipient != null && count($recipient['email']) > 0){
             $link = $this->connect();
             
             // first I get the message
@@ -99,7 +99,7 @@ class message {
 //            echo $msg."\n";
 
             $subject = 'Saludo de Cumpleaños - Fondo Esperanza';
-            $body = stripslashes($msg);
+			$body = stripslashes($msg);
             $start = strpos($body, "{imagen}") + 8;
             $end = strpos($body, "{/imagen}");
             $images = (substr($body, $start, ($end - $start)));
@@ -141,12 +141,14 @@ class message {
             // user name
             $patterns[13] = "{nombre}";
             // sending congrats email to each person
-            for($i = 0; $i < count($recipient); $i++){
-                $replacements[13] = $recipient[$i]['name'];
-                $body = str_replace($patterns, $replacements, $body);
+			echo "cantidad de recipients: ".count($recipient['email'])."\n\n\n";            
+            for($i = 0; $i < count($recipient['email']); $i++){
+				echo "email: ".$recipient['email'][$i]."\n\n";
+                $replacements[13] = $recipient['name'][$i];
+				$body = str_replace($patterns, $replacements, $body);
                 $command = substr($_SERVER["PHP_SELF"], 0, -11).'sendmail\sendEmail.exe '
                         . '-f '.$this->config->mailfrom.' '
-                        . '-t '.$recipient[$i]['email'].' '
+                        . '-t '.$recipient['email'][$i].' '
                         . '-u "'.$subject.'" '
                         . '-m "'.$body.'" '
                         . '-s '.$this->config->smtphost.':25 '
@@ -156,10 +158,13 @@ class message {
                         . '-o message-content-type=html '
                         . '-o message-charset=utf-8 '
                         . '-a '.substr($_SERVER["PHP_SELF"], 0, -40).$img;
+				exec($command);
+				sleep(1);
+				$body = str_replace($recipient['name'][$i], $patterns[13], $body);
+                echo $command;
                 
-                exec($command);
-//                echo $command;
             }
+			
         }
         
     }
@@ -167,6 +172,6 @@ class message {
 
 $message = new message();
 
-$recipient = $message->getBirthdays();
+$recipients = $message->getBirthdays();
 
-$message->sendMail($recipient);
+$message->sendMail($recipients);
