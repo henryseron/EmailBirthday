@@ -17,4 +17,8 @@ You can put the user name on the message (adding the label {name}) and add an im
 
 ## Scheduled task
 
-This plugins send automatic email when it runs over Windows System. An Scheduled Task have to be added to execute the PHP script: /plugins/system/emailbirthday/message.php
+This plugin send automatic email when it runs over Windows System. An Scheduled Task have to be added to execute the PHP script: /plugins/system/emailbirthday/message.php
+
+## License
+
+(GNU/GPL v3)[http://www.gnu.org/licenses/gpl-3.0.en.html]
